@@ -1,25 +1,23 @@
 Touchable
-=
+======
+Development of Virtual Pen Program with Object Detection and Tracking
+------
 
-##1. About
-
-####Development of Virtual Pen Program with Object Detection and Tracking
+## 1. About
 
 Python based, especially OpenCV-contrib and Tkinter
 
-The only 
-
-##2. Contact
+## 2. Contact
 
 **Made by 19-039 Sunbin Park /  19-124 Jeuk Hwang**
 
 Korea Science Academy of KAIST Data Structure Project 2020-1
 
-* Sunbin Park : [loganpark5617@gmail.com](loganpark5617@gmail.com)
+* Sunbin Park : loganpark5617@gmail.com
 
-* Jeuk Hwang : [jeukhwang@gmail.com](jeukhwang@gmail.com) / https://github.com/PositivePeriod
+* Jeuk Hwang : jeukhwang@gmail.com / https://github.com/PositivePeriod
 
-##3. Future Plan
+## 3. Future Plan
 
 **These files will continue to update; might be unstable**
 
@@ -29,7 +27,7 @@ Korea Science Academy of KAIST Data Structure Project 2020-1
 - More accuracy tracking
 - Make new relationship with people who are interested in object detection :)
 
-##4. Reference & Documentation
+## 4. Reference & Documentation
 
 > English documentation
 
@@ -48,8 +46,8 @@ Korea Science Academy of KAIST Data Structure Project 2020-1
 - [darkpgmr - tistory](https://darkpgmr.tistory.com/65)
 - [rosia - tistory](https://rosia.tistory.com/243)
 
-##5. Others
-Since the code is **object-oriented**, I expect expandability and reuse of code
+## 5. Others
+Since the code is object-oriented, I expect expandability and reuse of code
 
 If you have any idea or comment for our project, please contact us!
 
