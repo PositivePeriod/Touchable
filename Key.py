@@ -1,4 +1,4 @@
-from function import square_distance, color_type
+from function import square_distance
 
 
 class Key:
@@ -24,6 +24,7 @@ class Key:
             self.window.bind('<r>', self.key)
             self.window.bind('<z>', self.key)
             self.window.bind('<e>', self.key)
+            self.window.bind('<t>', self.key)
             self.window.bind('<space>', self.key)
 
     def access_event(self, event=None):
@@ -46,7 +47,9 @@ class Key:
                 self.master.var['run'] = False
 
         elif self.function == 'detect':
-            if event.keysym == 'z':
+            if event.keysym == 't':
+                self.master.stop = not self.master.stop
+            elif event.keysym == 'z':
                 self.canvas.erase()
                 self.event = None
             elif event.keysym == 'e':

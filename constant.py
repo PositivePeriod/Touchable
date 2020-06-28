@@ -13,7 +13,12 @@ message['About'] = \
 
 message['Help'] = \
 '''
-z : undo / e : erase
-r : rectangle / c : circle
-l : line / p : polygon / i : smooth line
+Make Pen
+c : choose / space : decide
+
+Detection
+space : cut drawing / z : undo / e : erase
+r : rectangle / c : circle / p : polygon
+l : line / i : smooth line
+
 '''

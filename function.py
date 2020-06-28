@@ -1,5 +1,4 @@
-from tkinter import Toplevel, Text, messagebox
-
+from tkinter import messagebox
 from PIL import ImageTk, Image
 from cv2 import cvtColor, COLOR_BGR2HSV, COLOR_HSV2BGR
 from numpy import uint8, sum
@@ -95,7 +94,6 @@ def pil_to_tkinter(pil_image):
     return tkinter_image
 
 
-# https://stackoverflow.com/questions/35113979/calculate-distance-between-colors-in-hsv-space
 def hsv_square_distance(color1, color2, only_h=False):
     dh = min(abs(color1[0] - color2[0]), 255 - abs(color1[0] - color2[0])) / (255.0/2)
     if only_h:
@@ -106,8 +104,7 @@ def hsv_square_distance(color1, color2, only_h=False):
 
 
 class Inform:
-    def __init__(self, root, msg):
-        # TODO
+    def __init__(self, msg):
         messagebox.showinfo(title=msg, message=message[msg])
         '''
         self.root = root

@@ -1,7 +1,4 @@
 import cv2
-import numpy as np
-# https://wikidocs.net/48925
-# https://rosia.tistory.com/243
 
 
 class Tracker:

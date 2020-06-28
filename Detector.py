@@ -1,8 +1,6 @@
 import math
-
 import cv2
 import numpy
-import time
 
 
 class Detector:
@@ -10,9 +8,6 @@ class Detector:
         # param 2 : accuracy - Hough
         self.subtract = cv2.createBackgroundSubtractorKNN(history=500, dist2Threshold=400, detectShadows=False)
         self.kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-        # http://blog.daum.net/geoscience/1316
-        # https://m.blog.naver.com/samsjang/220505815055
-
         params = cv2.SimpleBlobDetector_Params()
         params.minThreshold, params.maxThreshold = 40, 200  # Change thresholds
         params.filterByArea, params.minArea = True, 300  # Filter by Area
@@ -31,9 +26,6 @@ class Detector:
         mask_sub = cv2.morphologyEx(mask_sub, cv2.MORPH_CLOSE, self.kernel)
         image_sub = cv2.bitwise_and(image, image, mask=mask_sub)
         return image_sub
-
-    # https://gaussian37.github.io/vision-opencv-histogram/
-    # https://m.blog.naver.com/samsjang/220548160080
 
     def set_backprojection(self, roi=None, image=None, pos=None, rad=None, ratio=0.9):
         if roi is None and image is None and pos is None and rad is None:
@@ -118,10 +110,6 @@ class Detector:
             if area_ < area:
                 area_ = area
                 contour_ = contour
-        '''
-        epsilon = 0.1 * length_
-        approx = cv2.approxPolyDP(contour_, epsilon, True)
-        '''
         if contour_ is None:
             return None
         if not cv2.isContourConvex(contour_):
@@ -131,13 +119,13 @@ class Detector:
         cy = int(mmt['m01']/mmt['m00'])
         contour_area = cv2.contourArea(contour_)
         rad = int((4*contour_area/math.pi)**0.5)
-        return contour, cx, cy, rad
+        return contour, cx, cy, rad  # ?????
 
     def contour_color(self, image, contour):
         img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         mask = numpy.zeros(img_gray.shape, numpy.uint8)
         cv2.drawContours(mask, [contour], 0, 255, -1)
-        pixels = cv2.findNonZero(mask)
+        # pixels = cv2.findNonZero(mask)
         mean_color = cv2.mean(image, mask=mask)
         return mean_color
 

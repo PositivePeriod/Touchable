@@ -1,6 +1,5 @@
 import tkinter
 from tkinter import messagebox, simpledialog
-
 from function import Inform
 
 
@@ -67,8 +66,8 @@ class GUI:
                           None, ['Save', self.pen.save], ['Load', lambda: self.pen.load(self.master)]]],
                 ['Pen', [['Color', lambda: self.pen.change_color(self.master)],
                          ['Size', lambda: self.pen.change_size(self.master)]]],
-                ['Help', [['Help', lambda: Inform(self.window, 'Help')],
-                          ['About', lambda: Inform(self.window, 'About')]]]
+                ['Help', [['Help', lambda: Inform('Help')],
+                          ['About', lambda: Inform('About')]]]
             ]
         bar_widget = tkinter.Menu(self.window)
         for menu in bar_data:

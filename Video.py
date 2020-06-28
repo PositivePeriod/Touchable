@@ -1,6 +1,5 @@
 from threading import Thread, Lock
 from tkinter import messagebox
-
 import cv2
 import time
 

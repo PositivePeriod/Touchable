@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # DS Project 2020 made by Jeuk Hwang & Sunbin Park
-# contact : jeukhwang@gmail.com
+# contact : https://github.com/PositivePeriod/Touchable
 # python3 - 3.8.2
 
-from threading import Thread
-
-# https://answers.opencv.org/question/213719/simpleblobdetector_params-doesnt-detect-the-blobs-on-the-edges-of-the-image/
-import PIL
 
 from Canvas import Canvas
 from Detector import Detector
@@ -42,6 +38,7 @@ class Touchable:
         self.image_manager = ImageManager(self, r'./data/source/')
         self.function = None
         self.var = None
+        self.stop = None
 
         self.canvas = Canvas()
         self.gui = GUI(self)
@@ -184,9 +181,13 @@ class Touchable:
         ret_counter = 0
         self.gui.widget['canvas'].configure(bg='white')
         self.detector.reset_bg_subtract()
-        self.tracked = False
-        self.traker_roi = None
-        roi_size = 0.5
+
+        last_result = None
+        tracked = False
+        tracker_roi = None
+        tracker_result = None
+        roi_size = 2
+        self.stop = False
 
         while self.var['run']:  # determine detect color # TODO turn off
             try:
@@ -209,15 +210,18 @@ class Touchable:
                 pen.access_hsv(backup_pen_hsv)
                 self.gui.widget['palette'].create_rectangle(0, 0, self.gui.widget['palette'].winfo_width(),
                                                             self.gui.widget['palette'].winfo_height(),
-                                                            fill=color_type(pen.access_color(), 'hsv', 'hex'))
+                                                            fill=color_type(pen.access_color(), 'hsv', 'rgb'))
 
             width, height = self.gui.widget['canvas'].winfo_width(), self.gui.widget['canvas'].winfo_height()
-            if back_image is not None:
-                w, h = back_image.width, back_image.height
-                scale_, width_margin_, height_margin_ = fit_resize(w, h, width, height)
-                x_, y_ = int(w * scale_), int(h * scale_)
-                im = ImageTk.PhotoImage(img.resize((x_, y_), PIL.Image.ANTIALIAS))
-                self.gui.widget['canvas'].create_image(width_margin_, height_margin_, image=im)
+
+            if back_image is not None:  # TODO
+                height_, width_, _ = back_image.shape
+                scale_, width_margin_, height_margin_ = fit_resize(width_, height_, width, height)
+                img_cvt = cv2.cvtColor(back_image, cv2.COLOR_BGR2RGB)
+                img_res = cv2.resize(img_cvt, dsize=(int(width_ * scale_), int(height_ * scale_)), interpolation=cv2.INTER_AREA)
+                photo = pil_to_tkinter(img_res)
+                self.gui.widget['canvas'].create_image(width // 2, height // 2, image=photo, anchor=tkinter.CENTER)
+
             scale, width_margin, height_margin = fit_resize(1280, 720, width, height)
             self.canvas.draw(scale, width_margin, height_margin)
 
@@ -225,6 +229,11 @@ class Touchable:
 
             # 0. Preprocessing
             img_subtract = self.detector.bg_subtract(img)
+            '''
+            if self.stop:
+                time.sleep(0.01)
+                continue
+            '''
             img_color = self.detector.backprojection(img_subtract)
             # cv2.imshow('col', img_color)
             img_color = cv2.bilateralFilter(img_color, 9, 75, 75)
@@ -238,13 +247,13 @@ class Touchable:
                 contour, x, y, rad = answer
                 contour_color = self.detector.contour_color(img, contour)
                 if hsv_square_distance(pen.access_hsv(), contour_color, only_h=True) < 0.6 and rad > 10:
-                    result = [[x, y], rad]
-                    cv2.circle(img, (x, y), rad, (0, 0, 255))
+                    result = [[x, y], int(0.7*rad)]  # calibration
+                    cv2.circle(img, (x, y), rad, (255, 0, 0))
 
             if result is None:
                 # 2. Tracker
-                if self.tracked:
-                    pos, rad = self.traker_roi
+                if tracked:
+                    pos, rad = tracker_roi
                     r1 = int(max(pos[1]-roi_size*rad, 0))
                     r2 = int(min(pos[1]+roi_size*rad, int(img.shape[0])))
                     r3 = int(max(pos[0]-roi_size*rad, 0))
@@ -252,23 +261,27 @@ class Touchable:
                     roi = img[r1:r2, r3:r4].copy()
                     rect = self.tracker.track(roi)
                     if rect is None:
-                        self.tracked = False
+                        tracked = False
+                        tracker_result = None
                     else:
-                        rect = [rect[0]+r3, rect[1]+r1, rect[2]+r3, rect[3]+r1]
-                        print(rect, type(rect), type(rect[0]), rect[0])
-                        cv2.rectangle(img, (int(rect[0]), int(rect[1])), (int(rect[2]), int(rect[3])), (0, 0, 255), 3)
+                        rect = [int(rect[0]+r3), int(rect[1]+r1), int(rect[2]+r3), int(rect[3]+r1)]
+                        # print(rect, type(rect), type(rect[0]), rect[0])
+                        pos_ = [int((rect[0]+rect[2])/2), int((rect[1]+rect[3])/2)]
+                        rad_ = min(int((-rect[0]+rect[2])/2), int((-rect[1]+rect[3])/2))
+                        tracker_result = [pos_, rad_]
+                        cv2.rectangle(img, (rect[0], rect[1]), (rect[2], rect[3]), (0, 0, 255), 3)
 
                 # 3. Detector
                 circles = self.detector.find_circle(img_color, blob=True)  # TODO ROI
                 if circles is None:
                     no_circle += 1
-                    self.tracked = False
+                    tracked = False
                     self.tracker.reset()
                 if circles is not None:
                     no_circle = 0
                     temp_pos, temp_rad = [0, 0], 0
                     priority_ = 2  # small is good
-                    if self.tracked:
+                    if tracked:
                         for circle in circles:  # for every circle
                             x, y, rad = circle
                             if rad < 10:
@@ -295,21 +308,34 @@ class Touchable:
 
                     if priority_ != 2:
                         result = [temp_pos, int(temp_rad*0.7)]  # calibration
+                        cv2.circle(img, tuple(result[0]), result[1], (0, 0, 255))
 
             if result is None:
-                self.tracked = False
+                if tracker_result is not None:
+                    if (not (0 < tracker_result[0][0] < 1280)) or (not(0 < tracker_result[0][1] < 720)):
+                        outside = True
+                elif last_result is not None:
+                    if (not (0 < last_result[0][0] < 1280)) or (not(0 < last_result[0][1] < 720)):
+                        outside = True
+                tracked = False
             else:
                 pos, rad = result
-                self.traker_roi = result
-                if not self.tracked:
-                    self.tracked = True
-                    self.tracker.reset()
-                    y1 = int(max(pos[1]-roi_size*rad, 0))
-                    y2 = int(min(pos[1]+roi_size*rad, int(img.shape[0])))
-                    x1 = int(max(pos[0]-roi_size*rad, 0))
-                    x2 = int(min(pos[0]+roi_size*rad, int(img.shape[1])))
-                    print(pos, rad, y1, y2, x1, x2)
-                    self.tracker.set(img, (x1, y1, x2-x1, y2-y1))
+                if last_result is None or square_distance(last_result[0], result[0], root=True) < 50:
+                    last_result = result
+                tracked = True
+                self.tracker.reset()
+                if tracker_result is not None:
+                    track_rad = max(rad, tracker_result[1], 50)
+                else:
+                    track_rad = max(rad, 50)
+                tracker_roi = [pos, track_rad]
+                y1 = int(max(pos[1]-roi_size*track_rad, 0))
+                y2 = int(min(pos[1]+roi_size*track_rad, int(img.shape[0])))
+                x1 = int(max(pos[0]-roi_size*track_rad, 0))
+                x2 = int(min(pos[0]+roi_size*track_rad, int(img.shape[1])))
+                # print(pos, rad, y1, y2, x1, x2)
+                self.tracker.set(img, (x1, y1, x2-x1, y2-y1))
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255))
                 # self.detector.set_backprojection(image=img, pos=pos, rad=int(rad * 0.7 * 0.3))  # MIGHT ERROR - calibration
                 self.key.access_pos(pos)
 
