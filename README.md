@@ -15,7 +15,7 @@ Korea Science Academy of KAIST Data Structure Project 2020-1
 
 * Sunbin Park : loganpark5617@gmail.com
 
-* Jeuk Hwang : jeukhwang@gmail.com / https://github.com/PositivePeriod
+* Jeuk Hwang : https://github.com/PositivePeriod
 
 ## 3. Future Plan
 
