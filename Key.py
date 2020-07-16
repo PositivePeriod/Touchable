@@ -1,4 +1,4 @@
-from function import square_distance
+from Function import square_distance
 
 
 class Key:

@@ -1,5 +1,5 @@
 from scipy import interpolate
-from function import *
+from Function import *
 
 
 class Canvas:

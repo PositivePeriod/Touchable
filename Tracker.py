@@ -9,7 +9,6 @@ class Tracker:
         self.tracker = cv2.TrackerMOSSE_create()
 
     def set(self, set_img, set_rect):  # x, y, w, h
-        # print(set_img, set_img.shape, set_rect)
         self.tracker.init(set_img.copy(), set_rect)  # ERROR
 
     def track(self, image):
@@ -49,6 +48,5 @@ if __name__ == '__main__':
 
         if cv2.waitKey(1) == ord('q'):
             break
-    # release everything
     cap.release()
     cv2.destroyAllWindows()

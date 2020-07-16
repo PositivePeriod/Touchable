@@ -38,8 +38,9 @@ class Detector:
             r3 = int(max(pos[0] - rad, 0))
             r4 = int(min(pos[0] + rad, int(image.shape[1])))
             roi = image[r1:r2, r3:r4].copy()
-        if roi is not None and roi.shape != [] and roi.shape != () and len(roi) != 0:  # TODO ERROR OCCUR BECAREFUL
-            # print(roi, type(roi))
+        if roi is not None and roi.shape != [] and roi.shape != () and len(roi) != 0:
+            # TODO
+            # ERROR OCCUR BECAREFUL
             hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
             self.roihist = cv2.calcHist([hsv], [0, 1], None, [180, 256], [0, 180, 0, 256], accumulate=False)  # TODO change
             cv2.normalize(self.roihist, self.roihist, 0, 255, cv2.NORM_MINMAX)
@@ -119,7 +120,9 @@ class Detector:
         cy = int(mmt['m01']/mmt['m00'])
         contour_area = cv2.contourArea(contour_)
         rad = int((4*contour_area/math.pi)**0.5)
-        return contour, cx, cy, rad  # ?????
+        # TODO ?!
+        # contour - better result than contour_
+        return contour, cx, cy, rad
 
     def contour_color(self, image, contour):
         img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

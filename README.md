@@ -1,25 +1,21 @@
 Touchable
 ======
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Development of Virtual Pen Program with Object Detection and Tracking
-------
 
-## 1. About
+## Requirements
 
-Python based, especially OpenCV-contrib and Tkinter
+- Python3 tested on 3.8.2
+- [opencv-contrib](https://pypi.org/project/opencv-contrib-python/) tested on 4.2.0
+- numpy tested on 1.18.3
+- PIL tested on 7.1.2
+- scipy tested on 1.4.1
 
-## 2. Contact
+## Future Plan
 
-**Made by 19-039 Sunbin Park /  19-124 Jeuk Hwang**
-
-Korea Science Academy of KAIST Data Structure Project 2020-1
-
-* Sunbin Park : loganpark5617@gmail.com
-
-* Jeuk Hwang : https://github.com/PositivePeriod
-
-## 3. Future Plan
-
-**These files will continue to update; might be unstable**
+**This project might be unstable**
 
 - Make dependency files to help others understand
 - Web based program without installation
@@ -27,7 +23,7 @@ Korea Science Academy of KAIST Data Structure Project 2020-1
 - More accuracy tracking
 - Make new relationship with people who are interested in object detection :)
 
-## 4. Reference & Documentation
+## Relevant Documentation
 
 > English documentation
 
@@ -46,9 +42,13 @@ Korea Science Academy of KAIST Data Structure Project 2020-1
 - [darkpgmr - tistory](https://darkpgmr.tistory.com/65)
 - [rosia - tistory](https://rosia.tistory.com/243)
 
-## 5. Others
-Since the code is object-oriented, I expect expandability and reuse of code
+## Contact
 
-If you have any idea or comment for our project, please contact us!
+Korea Science Academy of KAIST Data Structure Project 2020-1
+* 19-039 Sunbin Park : loganpark5617@gmail.com
+* 19-124 Jeuk Hwang : https://github.com/PositivePeriod
 
-Have a nice coding!
+
+## License
+
+[MIT](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file.

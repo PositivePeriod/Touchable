@@ -2,7 +2,7 @@ from tkinter import messagebox
 from PIL import ImageTk, Image
 from cv2 import cvtColor, COLOR_BGR2HSV, COLOR_HSV2BGR
 from numpy import uint8, sum
-from constant import message
+from Constant import message
 import numpy
 
 
@@ -40,7 +40,6 @@ def center_color(image, x, y, rad):  # TODO need circle not rectangle but not im
         x2 = min(x+rad+1, image.shape[1])
         y1 = max(y - rad, 0)
         y2 = min(y + rad+1, image.shape[0])
-        # print(x1, x2, y1, y2)
         try:
             color = [int((sum(image[y1:y2, x1:x2, i]))/(x2-x1)/(y2-y1)) for i in range(3)]
             return color

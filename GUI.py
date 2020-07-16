@@ -1,6 +1,6 @@
 import tkinter
 from tkinter import messagebox, simpledialog
-from function import Inform
+from Function import Inform
 
 
 class GUI:
@@ -17,7 +17,7 @@ class GUI:
         self.window.minsize(400, 250)
         self.window.resizable(True, True)
         self.window.protocol("WM_DELETE_WINDOW", self.master.exit)
-        self.window.update()  # https://stackoverflow.com/questions/4220295/
+        self.window.update()
 
     def start_gui(self):
         self.widget['canvas_frame'] = tkinter.Frame(self.window, bg='black', bd=0)
@@ -112,6 +112,3 @@ class GUI:
                     return True
                 else:
                     messagebox.showwarning('Change pen', 'Invalid pen name')
-
-    # TODO - http://effbot.org/tkinterbook/menu.htm#menu.Menu.add-method
-    # https://stackoverflow.com/questions/20369754/update-label-of-tkinter-menubar-item

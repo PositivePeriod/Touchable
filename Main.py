@@ -1,14 +1,8 @@
-# -*- coding: utf-8 -*-
-# DS Project 2020 made by Jeuk Hwang & Sunbin Park
-# contact : https://github.com/PositivePeriod/Touchable
-# python3 - 3.8.2
-
-
 from Canvas import Canvas
 from Detector import Detector
 from GUI import GUI
 from Tracker import Tracker
-from function import *
+from Function import *
 from Video import Video
 from Pen import Pens
 from Key import Key
@@ -20,7 +14,7 @@ import tkinter.font
 import tkinter.simpledialog
 import time
 
-import cv2  # 4.2.0.34 # opencv-contriv-python
+import cv2
 import os
 
 
@@ -156,8 +150,8 @@ class Touchable:
                 break
             else:
                 self.var['run'] = True
-        #     self.detector.set_backprojection(image=self.var['pick_roi'][0], pos=self.var['pick_roi'][1],
-        # TypeError: 'NoneType' object is not subscriptable  # TODO
+        # TODO
+        # self.detector.set_backprojection(image=self.var['pick_roi'][0], pos=self.var['pick_roi'][1]
         time.sleep(0.05)
         self.detector.set_backprojection(image=self.var['pick_roi'][0], pos=self.var['pick_roi'][1],
                                          rad=self.var['pick_roi'][2])
@@ -204,7 +198,7 @@ class Touchable:
             except AttributeError as e:
                 print('AttributeError; detect', e)
                 return self.exit('detect')
-            if no_circle > 20:  # 20 can be change / for initialize color
+            if no_circle > 20:  # hard-coding / 20 can be change / for initialize color
                 print('No circle; reset color')
                 no_circle = 0
                 pen.access_hsv(backup_pen_hsv)
@@ -235,10 +229,8 @@ class Touchable:
                 continue
             '''
             img_color = self.detector.backprojection(img_subtract)
-            # cv2.imshow('col', img_color)
             img_color = cv2.bilateralFilter(img_color, 9, 75, 75)
             img_color = self.detector.morph(img_color)
-            # cv2.imshow('col3', img_color)
 
             # 1. Contour
             contours = self.detector.contour(img_color)
@@ -265,7 +257,6 @@ class Touchable:
                         tracker_result = None
                     else:
                         rect = [int(rect[0]+r3), int(rect[1]+r1), int(rect[2]+r3), int(rect[3]+r1)]
-                        # print(rect, type(rect), type(rect[0]), rect[0])
                         pos_ = [int((rect[0]+rect[2])/2), int((rect[1]+rect[3])/2)]
                         rad_ = min(int((-rect[0]+rect[2])/2), int((-rect[1]+rect[3])/2))
                         tracker_result = [pos_, rad_]
@@ -311,6 +302,7 @@ class Touchable:
                         cv2.circle(img, tuple(result[0]), result[1], (0, 0, 255))
 
             if result is None:
+                # TODO - not needed
                 if tracker_result is not None:
                     if (not (0 < tracker_result[0][0] < 1280)) or (not(0 < tracker_result[0][1] < 720)):
                         outside = True
@@ -333,7 +325,6 @@ class Touchable:
                 y2 = int(min(pos[1]+roi_size*track_rad, int(img.shape[0])))
                 x1 = int(max(pos[0]-roi_size*track_rad, 0))
                 x2 = int(min(pos[0]+roi_size*track_rad, int(img.shape[1])))
-                # print(pos, rad, y1, y2, x1, x2)
                 self.tracker.set(img, (x1, y1, x2-x1, y2-y1))
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255))
                 # self.detector.set_backprojection(image=img, pos=pos, rad=int(rad * 0.7 * 0.3))  # MIGHT ERROR - calibration
