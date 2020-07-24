@@ -7,6 +7,8 @@ Development of Virtual Pen Program with Object Detection and Tracking
 
 Execution Video: https://www.youtube.com/watch?v=7ez4rfBx4nU
 
+Project Report : [Click to see](https://github.com/PositivePeriod/Touchable/blob/master/Development%20of%20Virtual%20Pen%20Program%20with%20Object%20Detection%20and%20Tracking_Sunbin%20Park_Jeuk%20Hwang_20200725.pdf)
+
 ## Requirements
 
 - Python3 tested on 3.8.2
